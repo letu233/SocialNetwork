@@ -250,11 +250,11 @@ private Toolbar mToolbar;
     {
         Description = PostDescription.getText().toString();
 
-        if(ImageUri == null)
-        {
-            Toast.makeText(this, "Please select post image...", Toast.LENGTH_SHORT).show();
-        }
-        else if(TextUtils.isEmpty(Description))
+//        if(ImageUri == null)
+//        {
+//            Toast.makeText(this, "Please select post image...", Toast.LENGTH_SHORT).show();
+//        }
+        if(TextUtils.isEmpty(Description))
         {
             Toast.makeText(this, "Please say something about your image...", Toast.LENGTH_SHORT).show();
         }
@@ -265,7 +265,7 @@ private Toolbar mToolbar;
             loadingBar.show();
             loadingBar.setCanceledOnTouchOutside(true);
 //            SavingPostInformationToDatabase();
-            StoringImageToFirebaseStorage();
+            SavingPostInformationToDatabase();
         }
     }
 
@@ -315,7 +315,7 @@ private Toolbar mToolbar;
                         Uri downloadUrl = uri;
                         Toast.makeText(PostActivity.this, "image uploaded successfully to Storage...", Toast.LENGTH_SHORT).show();
 //
-                        SavingPostInformationToDatabase(downloadUrl.toString());
+//                        SavingPostInformationToDatabase(downloadUrl.toString());
                     }
 
                 });
@@ -327,8 +327,17 @@ private Toolbar mToolbar;
 
 
 
-    private void SavingPostInformationToDatabase(String url)
+    private void SavingPostInformationToDatabase()
     {
+        Calendar calFordDate = Calendar.getInstance();
+        SimpleDateFormat currentDate = new SimpleDateFormat("dd-MMMM-yyyy");
+        saveCurrentDate = currentDate.format(calFordDate.getTime());
+
+        Calendar calFordTime = Calendar.getInstance();
+        SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm");
+        saveCurrentTime = currentTime.format(calFordDate.getTime());
+
+        postRandomName = saveCurrentDate + saveCurrentTime;
         UsersRef.child(current_user_id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
@@ -342,8 +351,8 @@ private Toolbar mToolbar;
                     postsMap.put("uid", current_user_id);
                     postsMap.put("date", saveCurrentDate);
                     postsMap.put("time", saveCurrentTime);
-                    postsMap.put("description", Description);
-                    postsMap.put("postimage", url);
+                    postsMap.put("content", Description);
+//                    postsMap.put("postimage", url);
                     postsMap.put("email", email);
                     postsMap.put("fullname", userFullName);
                     PostsRef.child(current_user_id + postRandomName).updateChildren(postsMap)

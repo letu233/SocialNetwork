@@ -9,28 +9,21 @@ import androidx.recyclerview.widget.RecyclerView;
 //import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.socialnetwork.model.Posts;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 //import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.core.Context;
 import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -116,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
             protected void populateViewHolder(PostsViewHolder holder, Posts model, int i) {
                 holder.setFullname(model.getFullname());
                 holder.setDate(model.getDate());
-                holder.setDescription(model.getDescription());
+                holder.setDescription(model.getContent());
                 holder.setPostimage(model.getPostimage());
                 holder.setTime(model.getTime());
             }

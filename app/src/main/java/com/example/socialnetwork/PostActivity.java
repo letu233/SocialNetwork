@@ -213,7 +213,7 @@ private Toolbar mToolbar;
         PostsRef = FirebaseDatabase.getInstance().getReference().child("Posts");
 
 
-        SelectPostImage = (ImageButton) findViewById(R.id.select_post_image);
+//        SelectPostImage = (ImageButton) findViewById(R.id.select_post_image);
         UpdatePostButton = (Button) findViewById(R.id.update_post_button);
         PostDescription =(EditText) findViewById(R.id.post_description);
         loadingBar = new ProgressDialog(this);
@@ -226,13 +226,13 @@ private Toolbar mToolbar;
 //        getSupportActionBar().setTitle("Update Post");
 
 
-        SelectPostImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v)
-            {
-                OpenGallery();
-            }
-        });
+//        SelectPostImage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v)
+//            {
+//                OpenGallery();
+//            }
+//        });
 
 
         UpdatePostButton.setOnClickListener(new View.OnClickListener() {

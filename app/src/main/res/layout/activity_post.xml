@@ -6,14 +6,25 @@
     android:layout_height="match_parent"
     tools:context=".PostActivity">
 
-    <ImageButton
-        android:id="@+id/select_post_image"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="295dp"
-        android:scaleType="fitCenter"
-        app:srcCompat="@drawable/select_image" />
+        android:layout_marginStart="3dp"
+        android:layout_marginLeft="3dp"
+        android:layout_marginEnd="278dp"
+        android:layout_marginRight="278dp"
+        android:layout_marginBottom="498dp"
+        android:gravity="center_horizontal"
+        android:text="Topic:"
+        android:textAlignment="center"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/post_description"
@@ -32,7 +43,7 @@
         android:background="@drawable/inputs"
         android:ems="10"
         android:gravity="start|top"
-        android:hint="Write something"
+        android:hint="Write content"
         android:inputType="textMultiLine"
         android:padding="10dp" />
 
@@ -48,4 +59,57 @@
         android:layout_marginBottom="31dp"
         android:background="@drawable/button"
         android:text="Upload Post" />
+
+    <EditText
+        android:id="@+id/post_title"
+        android:layout_width="276dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="135dp"
+        android:layout_marginLeft="135dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginBottom="336dp"
+        android:background="@drawable/inputs"
+        android:ems="10"
+        android:gravity="start|top"
+        android:hint="Write something"
+        android:inputType="textMultiLine"
+        android:padding="10dp" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginEnd="282dp"
+        android:layout_marginRight="282dp"
+        android:layout_marginBottom="347dp"
+        android:text="Write Title:"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:gravity="center_horizontal" />
+
+    <Spinner
+        android:id="@+id/topic"
+        android:layout_width="239dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginBottom="498dp"
+        android:spinnerMode="dropdown"/>
 </RelativeLayout>

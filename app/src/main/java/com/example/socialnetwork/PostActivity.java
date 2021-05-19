@@ -13,9 +13,12 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
@@ -36,7 +39,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 
-public class PostActivity extends AppCompatActivity {
+public class PostActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 //    private ImageButton SelectPostImage;
 //    private Button UpdatePostButton;
 //    private EditText PostDescription;
@@ -185,10 +188,15 @@ private Toolbar mToolbar;
     private ImageButton SelectPostImage;
     private Button UpdatePostButton;
     private EditText PostDescription;
+    private EditText PostTitle;
+    private Spinner spinner;
 
     private static final int Gallery_Pick = 1;
     private Uri ImageUri;
     private String Description;
+    private String Title;
+    private String Topic;
+    String[] items = new String[]{"Tech Industry", "Job Openings", "Housing", "Work Visa", "Data Science"};
 
     private StorageReference PostsImagesRefrence;
     private DatabaseReference UsersRef, PostsRef;
@@ -216,6 +224,12 @@ private Toolbar mToolbar;
 //        SelectPostImage = (ImageButton) findViewById(R.id.select_post_image);
         UpdatePostButton = (Button) findViewById(R.id.update_post_button);
         PostDescription =(EditText) findViewById(R.id.post_description);
+        PostTitle = (EditText)findViewById(R.id.post_title);
+        spinner = (Spinner) findViewById(R.id.topic);
+        spinner.setOnItemSelectedListener(this);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
+        spinner.setAdapter(adapter);
         loadingBar = new ProgressDialog(this);
 
 
@@ -245,15 +259,26 @@ private Toolbar mToolbar;
     }
 
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
+        Topic = items[position];
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
     private void ValidatePostInfo()
     {
         Description = PostDescription.getText().toString();
+        Title = PostTitle.getText().toString();
 
-//        if(ImageUri == null)
-//        {
-//            Toast.makeText(this, "Please select post image...", Toast.LENGTH_SHORT).show();
-//        }
+
+        if(Title == null)
+        {
+            Toast.makeText(this, "Please write some Title...", Toast.LENGTH_SHORT).show();
+        }
         if(TextUtils.isEmpty(Description))
         {
             Toast.makeText(this, "Please say something about your image...", Toast.LENGTH_SHORT).show();
@@ -352,6 +377,8 @@ private Toolbar mToolbar;
                     postsMap.put("date", saveCurrentDate);
                     postsMap.put("time", saveCurrentTime);
                     postsMap.put("content", Description);
+                    postsMap.put("Title", Title);
+                    postsMap.put("Topic", Topic);
 //                    postsMap.put("postimage", url);
                     postsMap.put("email", email);
                     postsMap.put("fullname", userFullName);

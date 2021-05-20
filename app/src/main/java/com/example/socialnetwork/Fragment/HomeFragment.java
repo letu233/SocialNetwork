@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import com.example.socialnetwork.Adapter.PostAdapter;
 import com.example.socialnetwork.MainActivity;
 import com.example.socialnetwork.R;
 import com.example.socialnetwork.model.Posts;
+import com.example.socialnetwork.model.Users;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,6 +45,7 @@ public class HomeFragment extends Fragment {
     private FirebaseAuth mAuth;
     private DatabaseReference UsersRef, databaseReference;
     private List<Posts> list;
+    private List<Users> listUser;
     String currentUserID;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -51,6 +54,7 @@ public class HomeFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recycle_postview);
         recyclerView.setHasFixedSize(true);
         databaseReference = FirebaseDatabase.getInstance().getReference("Posts");
+        UsersRef = FirebaseDatabase.getInstance().getReference("User");
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setReverseLayout(true);
         linearLayoutManager.setStackFromEnd(true);
@@ -65,6 +69,7 @@ public class HomeFragment extends Fragment {
                 for(DataSnapshot dataSnapshot: snapshot.getChildren()){
                     Posts post = dataSnapshot.getValue(Posts.class);
                     list.add(post);
+
                 }
                 postAdapter.notifyDataSetChanged();
             }
@@ -74,6 +79,21 @@ public class HomeFragment extends Fragment {
 
             }
         });
+//        UsersRef.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                for(DataSnapshot dataSnapshot: snapshot.getChildren()){
+//                    Users user = dataSnapshot.getValue(Users.class);
+//                    listUser.add(user);
+//                    Toast.makeText(getContext(), listUser.get(1).toString(), Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
 
         return view;
 //        // Inflate the layout for this fragment

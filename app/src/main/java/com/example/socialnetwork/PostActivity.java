@@ -22,6 +22,9 @@ import android.widget.Spinner;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
+import com.example.socialnetwork.model.Posts;
+import com.example.socialnetwork.model.Topics;
+import com.example.socialnetwork.model.Users;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -36,8 +39,12 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 
 public class PostActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 //    private ImageButton SelectPostImage;
@@ -196,12 +203,13 @@ private Toolbar mToolbar;
     private String Description;
     private String Title;
     private String Topic;
-    String[] items = new String[]{"Tech Industry", "Job Openings", "Housing", "Work Visa", "Data Science"};
+    String[] items = new String[]{};
 
     private StorageReference PostsImagesRefrence;
-    private DatabaseReference UsersRef, PostsRef;
+    private DatabaseReference UsersRef, PostsRef, TopicsRef;
     private FirebaseAuth mAuth;
-
+//    private ArrayList<String> list;
+//    ArrayList<String> list1 = new ArrayList<>(Arrays.asList());
     private String saveCurrentDate, saveCurrentTime, postRandomName, downloadUrl, current_user_id;
 
 
@@ -219,6 +227,30 @@ private Toolbar mToolbar;
         PostsImagesRefrence = FirebaseStorage.getInstance().getReference();
         UsersRef = FirebaseDatabase.getInstance().getReference().child("User");
         PostsRef = FirebaseDatabase.getInstance().getReference().child("Posts");
+        TopicsRef = FirebaseDatabase.getInstance().getReference().child("Topic");
+//        list = new ArrayList<String>();
+
+        TopicsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                final ArrayList<String> list = new ArrayList<String>();
+                for(DataSnapshot dataSnapshot: snapshot.getChildren()){
+                    Topics topics = dataSnapshot.getValue(Topics.class);
+//                    Toast.makeText(PostActivity.this, topics.getName(), Toast.LENGTH_SHORT).show();
+
+                    list.add(topics.getName());
+                }
+                spinner = (Spinner) findViewById(R.id.topic);
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(PostActivity.this, android.R.layout.simple_spinner_dropdown_item, list);
+                spinner.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
 
 
 //        SelectPostImage = (ImageButton) findViewById(R.id.select_post_image);
@@ -228,9 +260,10 @@ private Toolbar mToolbar;
         spinner = (Spinner) findViewById(R.id.topic);
         spinner.setOnItemSelectedListener(this);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
-        spinner.setAdapter(adapter);
+//        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, list);
+//        spinner.setAdapter(adapter);
         loadingBar = new ProgressDialog(this);
+
 
 
 //        mToolbar = (Toolbar) findViewById(R.id.update_post_page_toolbar);
@@ -262,10 +295,10 @@ private Toolbar mToolbar;
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-        Topic = items[position];
+        Topic = spinner.getSelectedItem().toString();
     }
 
-    @Override
+
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
@@ -355,7 +388,7 @@ private Toolbar mToolbar;
     private void SavingPostInformationToDatabase()
     {
         Calendar calFordDate = Calendar.getInstance();
-        SimpleDateFormat currentDate = new SimpleDateFormat("dd-MMMM-yyyy");
+        SimpleDateFormat currentDate = new SimpleDateFormat("dd-MM-yyyy", new Locale("en"));
         saveCurrentDate = currentDate.format(calFordDate.getTime());
 
         Calendar calFordTime = Calendar.getInstance();

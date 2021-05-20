@@ -48,6 +48,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Posts post = mPost.get(position);
+        holder.time.setText(post.getTime());
+        holder.date.setText(post.getDate());
         holder.topic.setText(post.getTopic());
         holder.title.setText(post.getTitle());
         holder.content.setText(post.getContent());
@@ -61,10 +63,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView title, content, writer;
+        public TextView title, content, writer, time, date;
         public Button topic;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            time = itemView.findViewById(R.id.tv_time);
+            date = itemView.findViewById(R.id.tv_date);
             topic = itemView.findViewById(R.id.btn_topic);
             title = itemView.findViewById(R.id.tv_title);
             content = itemView.findViewById(R.id.tv_content);

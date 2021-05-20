@@ -75,6 +75,22 @@
                 android:layout_marginLeft="25dp">
 
             </TextView>
+            <TextView
+                android:id="@+id/tv_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="writer"
+                android:layout_marginLeft="25dp">
+
+            </TextView>
+            <TextView
+                android:id="@+id/tv_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="writer"
+                android:layout_marginLeft="25dp">
+
+            </TextView>
         </LinearLayout>
         <RelativeLayout
             android:layout_width="match_parent"

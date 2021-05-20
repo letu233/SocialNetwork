@@ -1,6 +1,10 @@
 package com.example.socialnetwork.Adapter;
 
+import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,51 +19,60 @@ import com.example.socialnetwork.model.Posts;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
-public class PostAdapter {
-    private BottomNavigationView bottomNavigationView;
-    private Fragment fragment;
-    private RecyclerView postList;
-    private ImageButton AddNewPostButton;
-    private FirebaseAuth mAuth;
-    private DatabaseReference UsersRef, PostsRef;
-    String currentUserID;
-    private void DisplayAllUserPosts() {
+import java.util.List;
 
-        PostsRef = FirebaseDatabase.getInstance().getReference().child("Posts");
+public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
+    public Context mContext;
+    public List<Posts> mPost;
+    private FirebaseUser firebaseUser;
 
-        FirebaseRecyclerAdapter<Posts, ViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Posts, ViewHolder>(Posts.class, R.layout.all_post_layout, ViewHolder.class, PostsRef) {
-            @Override
-            protected void populateViewHolder(ViewHolder holder, Posts model, int i) {
-                holder.setWriter(model.getFullname());
-                holder.setTitle(model.getDate());
-                holder.setContent(model.getContent());
-            }
-        };
-        postList.setAdapter(firebaseRecyclerAdapter);
+    public PostAdapter(Context mContext, List<Posts> mPost){
+        this.mContext = mContext;
+        this.mPost = mPost;
     }
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(mContext).inflate(R.layout.post_item_view, parent, false);
+        return new PostAdapter.ViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        Posts post = mPost.get(position);
+        holder.topic.setText(post.getTopic());
+        holder.title.setText(post.getTitle());
+        holder.content.setText(post.getContent());
+        holder.writer.setText(post.getFullname());
+    }
+
+    @Override
+    public int getItemCount() {
+        return mPost.size();
+    }
+
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView title, content, writer;
-        View mView;
+        public Button topic;
         public ViewHolder(@NonNull View itemView) {
-
             super(itemView);
+            topic = itemView.findViewById(R.id.btn_topic);
+            title = itemView.findViewById(R.id.tv_title);
+            content = itemView.findViewById(R.id.tv_content);
+            writer = itemView.findViewById(R.id.tv_writer);
 
-        }
-        public void setTitle (String Title){
-            TextView title = (TextView) mView.findViewById(R.id.tv_title);
-            title.setText(Title);
-        }
-        public void setContent (String Content){
-            TextView content = (TextView) mView.findViewById(R.id.tv_content);
-            content.setText(Content);
-        }
-        public void setWriter (String Writer){
-            TextView writer = (TextView) mView.findViewById(R.id.tv_writer);
-            writer.setText(Writer);
+
         }
     }
+
+
 }

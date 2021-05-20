@@ -1,6 +1,7 @@
 package com.example.socialnetwork;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -211,63 +212,63 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(onNav);
-        mAuth = FirebaseAuth.getInstance();
-        currentUserID = mAuth.getCurrentUser().getUid();
-        UsersRef = FirebaseDatabase.getInstance().getReference().child("User");
-        PostsRef = FirebaseDatabase.getInstance().getReference().child("Posts");
-        postList = (RecyclerView) findViewById(R.id.all_user_post_list);
-        postList.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setReverseLayout(true);
-        linearLayoutManager.setStackFromEnd(true);
-        postList.setLayoutManager(linearLayoutManager);
+        //mAuth = FirebaseAuth.getInstance();
+        //currentUserID = mAuth.getCurrentUser().getUid();
+        //sersRef = FirebaseDatabase.getInstance().getReference().child("User");
+        //PostsRef = FirebaseDatabase.getInstance().getReference().child("Posts");
+        //postList = (RecyclerView) findViewById(R.id.all_user_post_list);
+        //postList.setHasFixedSize(true);
+        //LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        //linearLayoutManager.setReverseLayout(true);
+        //linearLayoutManager.setStackFromEnd(true);
+        //postList.setLayoutManager(linearLayoutManager);
 //        DisplayAllUserPosts();
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
 
     }
 
-    private void DisplayAllUserPosts() {
-        FirebaseRecyclerAdapter<Posts, PostsViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Posts, PostsViewHolder>(Posts.class, R.layout.all_post_layout, PostsViewHolder.class, PostsRef) {
-            @Override
-            protected void populateViewHolder(PostsViewHolder holder, Posts model, int i) {
-                holder.setFullname(model.getFullname());
-                holder.setDate(model.getDate());
-                holder.setDescription(model.getContent());
-                holder.setPostimage(model.getPostimage());
-                holder.setTime(model.getTime());
-            }
-        };
-        postList.setAdapter(firebaseRecyclerAdapter);
-    }
-    public static class PostsViewHolder extends RecyclerView.ViewHolder{
-        View mView;
-        public PostsViewHolder(@NonNull View itemView) {
-            super(itemView);
-            mView = itemView;
-        }
-        public void setFullname(String fullname){
-            TextView username = (TextView) mView.findViewById(R.id.post_user_name);
-            username.setText(fullname);
-        }
-        public void setPostimage( String image){
-            ImageView post_image = (ImageView) mView.findViewById(R.id.post_image);
-            Picasso.get().load(image).into(post_image);
-        }
-        public void setTime(String time){
-            TextView PostTime = (TextView) mView.findViewById(R.id.post_time);
-            PostTime.setText(time);
-
-        }
-        public void setDate(String Date){
-            TextView PostDate = (TextView) mView.findViewById(R.id.post_date);
-            PostDate.setText(Date);
-        }
-        public void setDescription(String Des){
-            TextView PostDes = (TextView) mView.findViewById(R.id.post_description);
-            PostDes.setText(Des);
-        }
-    }
+//    private void DisplayAllUserPosts() {
+//        FirebaseRecyclerAdapter<Posts, PostsViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Posts, PostsViewHolder>(Posts.class, R.layout.all_post_layout, PostsViewHolder.class, PostsRef) {
+//            @Override
+//            protected void populateViewHolder(PostsViewHolder holder, Posts model, int i) {
+//                holder.setFullname(model.getFullname());
+//                holder.setDate(model.getDate());
+//                holder.setDescription(model.getContent());
+//                holder.setPostimage(model.getPostimage());
+//                holder.setTime(model.getTime());
+//            }
+//        };
+//        postList.setAdapter(firebaseRecyclerAdapter);
+//    }
+//    public static class PostsViewHolder extends RecyclerView.ViewHolder{
+//        View mView;
+//        public PostsViewHolder(@NonNull View itemView) {
+//            super(itemView);
+//            mView = itemView;
+//        }
+//        public void setFullname(String fullname){
+//            TextView username = (TextView) mView.findViewById(R.id.post_user_name);
+//            username.setText(fullname);
+//        }
+//        public void setPostimage( String image){
+//            ImageView post_image = (ImageView) mView.findViewById(R.id.post_image);
+//            Picasso.get().load(image).into(post_image);
+//        }
+//        public void setTime(String time){
+//            TextView PostTime = (TextView) mView.findViewById(R.id.post_time);
+//            PostTime.setText(time);
+//
+//        }
+//        public void setDate(String Date){
+//            TextView PostDate = (TextView) mView.findViewById(R.id.post_date);
+//            PostDate.setText(Date);
+//        }
+//        public void setDescription(String Des){
+//            TextView PostDes = (TextView) mView.findViewById(R.id.post_description);
+//            PostDes.setText(Des);
+//        }
+//    }
 
     private void SendUserToPostActivity() {
         Intent addNewPostIntent = new Intent(MainActivity.this, PostActivity.class);
@@ -297,9 +298,9 @@ public class MainActivity extends AppCompatActivity {
                     break;
 
 
-//                case R.id.notification_bottom:
-//                    selected = new Fragment_Noti();
-//                    break;
+                case R.id.nav_notify:
+                    selected = new NotifyFragment();
+                    break;
 
 
             }

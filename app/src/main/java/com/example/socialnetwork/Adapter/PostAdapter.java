@@ -33,6 +33,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     public Context mContext;
     public List<Posts> mPost;
     private FirebaseUser firebaseUser;
+    private FirebaseAuth mAuth;
 
     public PostAdapter(Context mContext, List<Posts> mPost){
         this.mContext = mContext;
@@ -47,6 +48,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         Posts post = mPost.get(position);
         holder.time.setText(post.getTime());
         holder.date.setText(post.getDate());
@@ -63,10 +65,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             public void onClick(View view) {
                 if (holder.like.getTag().equals("like")){
                     FirebaseDatabase.getInstance().getReference().child("Likes")
-                            .child(postid).child(post.getUid()).setValue(true);
+                            .child(postid).child(firebaseUser.getUid()).setValue(true);
                 }else{
                     FirebaseDatabase.getInstance().getReference().child("Likes")
-                            .child(postid).child(post.getUid()).removeValue();
+                            .child(postid).child(firebaseUser.getUid()).removeValue();
                 }
             }
         });

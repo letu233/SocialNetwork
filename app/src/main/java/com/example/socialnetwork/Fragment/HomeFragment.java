@@ -24,6 +24,7 @@ import com.example.socialnetwork.model.Users;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,7 +37,8 @@ import java.util.List;
 
 
 public class HomeFragment extends Fragment {
-
+    private ImageView imageView;
+    private TextView textView;
     private BottomNavigationView bottomNavigationView;
     private Fragment fragment;
     private RecyclerView recyclerView;
@@ -46,6 +48,7 @@ public class HomeFragment extends Fragment {
     private DatabaseReference UsersRef, databaseReference;
     private List<Posts> list;
     private List<Users> listUser;
+    private FirebaseUser firebaseUser;
     String currentUserID;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,6 +56,8 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         recyclerView = view.findViewById(R.id.recycle_postview);
         recyclerView.setHasFixedSize(true);
+//        imageView = container.findViewById(R.id.like);
+//        textView = container.findViewById(R.id.count_like);
         databaseReference = FirebaseDatabase.getInstance().getReference("Posts");
         UsersRef = FirebaseDatabase.getInstance().getReference("User");
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -69,6 +74,8 @@ public class HomeFragment extends Fragment {
                 for(DataSnapshot dataSnapshot: snapshot.getChildren()){
                     Posts post = dataSnapshot.getValue(Posts.class);
                     list.add(post);
+
+
 
                 }
                 postAdapter.notifyDataSetChanged();
@@ -128,6 +135,44 @@ public class HomeFragment extends Fragment {
 //            }
 //        };
 //        postList.setAdapter(firebaseRecyclerAdapter);
+    }
+    public void isLikes(String postid, ImageView imageView){
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance()
+                .getReference().child("Likes").child(postid);
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.child(firebaseUser.getUid()).exists()){
+                    imageView.setImageResource(R.drawable.ic_like_red);
+                    imageView.setTag("liked");
+                }else{
+                    imageView.setImageResource(R.drawable.ic_like);
+                    imageView.setTag("like");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+    public void numLikes(final TextView likes, String postid){
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance()
+                .getReference().child("Likes").child(postid);
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                likes.setText(snapshot.getChildrenCount()+" ");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
 }

@@ -54,9 +54,9 @@ public class ProfileFragment extends Fragment {
 
     FirebaseAuth mAuth;
     FirebaseUser firebaseUser;
-    DatabaseReference databaseReference;
+    DatabaseReference databaseReference, postRef;
 
-
+    private ArrayList<String> PostKey;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,6 +65,7 @@ public class ProfileFragment extends Fragment {
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         databaseReference = FirebaseDatabase.getInstance().getReference("User");
+        postRef = FirebaseDatabase.getInstance().getReference("Posts");
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -78,6 +79,9 @@ public class ProfileFragment extends Fragment {
         emailtv = view.findViewById(R.id.email);
         edit_profile = view.findViewById(R.id.edit_profile);
 
+        PostKey = new ArrayList<String>();
+
+
         recyclerView = view.findViewById(R.id.recycle_view);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -85,7 +89,7 @@ public class ProfileFragment extends Fragment {
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
         postsList = new ArrayList<>();
-        myPostAdapter = new PostAdapter(getContext(), postsList);
+        myPostAdapter = new PostAdapter(getContext(), postsList, PostKey);
         recyclerView.setAdapter(myPostAdapter);
 
 
@@ -96,34 +100,15 @@ public class ProfileFragment extends Fragment {
         linearLayoutManagerFav.setStackFromEnd(true);
         recyclerViewFav.setLayoutManager(linearLayoutManagerFav);
         postsListFav = new ArrayList<>();
-        myPostAdapterFav = new PostAdapter(getContext(), postsListFav);
+        myPostAdapterFav = new PostAdapter(getContext(), postsListFav, PostKey);
         recyclerViewFav.setAdapter(myPostAdapterFav);
 
         recyclerView.setVisibility(View.VISIBLE);
         recyclerViewFav.setVisibility(View.GONE);
 
+        getPostKey();
 
-        myFavourites();
-        Query query = databaseReference.orderByChild("email").equalTo(firebaseUser.getEmail());
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot ds : snapshot.getChildren()){
-                    String name = ""+ds.child("name").getValue();
-                    String company = ""+ds.child("company").getValue();
-                    String email = ""+ds.child("email").getValue();
-
-                    fullname.setText(name);
-                    companytv.setText(company);
-                    emailtv.setText(email);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+        getUserInfo();
 
         edit_profile.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -159,10 +144,52 @@ public class ProfileFragment extends Fragment {
 
         getPostCount();
         getMyPost();
-
+        myFavourites();
 
         return view;
     }
+
+    private void getUserInfo(){
+        Query query = databaseReference.orderByChild("email").equalTo(firebaseUser.getEmail());
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot ds : snapshot.getChildren()){
+                    String name = ""+ds.child("name").getValue();
+                    String company = ""+ds.child("company").getValue();
+                    String email = ""+ds.child("email").getValue();
+
+                    fullname.setText(name);
+                    companytv.setText(company);
+                    emailtv.setText(email);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void getPostKey(){
+        postRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot dataSnapshot: snapshot.getChildren()){
+                    Posts post = dataSnapshot.getValue(Posts.class);
+                    String postkey = dataSnapshot.getKey();
+                    PostKey.add(postkey);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     private void getPostCount(){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");
         reference.addValueEventListener(new ValueEventListener() {
@@ -214,14 +241,12 @@ public class ProfileFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot ds : snapshot.getChildren()){
                     String postId = ds.getKey();
-//                    System.out.println("postIdddddddddddd : "+postId);
                     reference.child(postId).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot2) {
                             for (DataSnapshot ds2 : snapshot2.getChildren()){
                                 if (ds2.getKey().equalsIgnoreCase(firebaseUser.getUid())){
                                     listMyfavs.add(ds.getKey());
-//                                    System.out.println("iddddd : "+ds.getKey());
                                 }
                             }
                         }

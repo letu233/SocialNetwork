@@ -8,14 +8,17 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.socialnetwork.MainActivity;
+import com.example.socialnetwork.PostActivity;
 import com.example.socialnetwork.R;
 import com.example.socialnetwork.model.Posts;
+import com.example.socialnetwork.model.Topics;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,6 +30,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.EventListener;
 import java.util.List;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
@@ -34,30 +39,53 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     public List<Posts> mPost;
     private FirebaseUser firebaseUser;
     private FirebaseAuth mAuth;
-
-    public PostAdapter(Context mContext, List<Posts> mPost){
+    private DatabaseReference PostsRef;
+    private ArrayList<String> PostKey;
+    public PostAdapter(Context mContext, List<Posts> mPost, ArrayList<String>Postkey){
         this.mContext = mContext;
         this.mPost = mPost;
+        this.PostKey = Postkey;
     }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.post_item_view, parent, false);
+//        PostsRef = FirebaseDatabase.getInstance().getReference().child("Posts");
+//        PostsRef.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                PostKey=new ArrayList<String>();
+//                for(DataSnapshot dataSnapshot: snapshot.getChildren()){
+//                    String postid = dataSnapshot.getKey();
+//                    Toast.makeText(mContext, postid, Toast.LENGTH_SHORT).show();
+//
+//                   PostKey.add(postid);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
         return new PostAdapter.ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        String postid = PostKey.get(position);
         Posts post = mPost.get(position);
+        String sort = displayContent(post.getContent());
         holder.time.setText(post.getTime());
         holder.date.setText(post.getDate());
         holder.topic.setText(post.getTopic());
         holder.title.setText(post.getTitle());
-        holder.content.setText(post.getContent());
+        holder.content.setText(sort);
         holder.writer.setText(post.getFullname());
 
-        String postid = post.getUid() + post.getDate() + post.getTime();
+//        String postid = post.getUid() + post.getDate() + post.getTime();
         isLikes(postid, holder.like);
         numLikes(holder.count_like, postid);
         holder.like.setOnClickListener(new View.OnClickListener() {
@@ -135,6 +163,17 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             like = itemView.findViewById(R.id.like);
             count_like = itemView.findViewById(R.id.count_like);
         }
+    }
+    private String displayContent(String content){
+        int count = 0;
+        StringBuilder sb = new StringBuilder();
+        String[] words = content.split(" ");
+        for (String w: words){
+            sb.append(w+ " ");
+            count++;
+            if (count == 10) break;
+        }
+        return sb.toString();
     }
 
 

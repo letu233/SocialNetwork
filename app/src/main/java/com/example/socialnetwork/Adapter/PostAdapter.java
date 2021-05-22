@@ -50,11 +50,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         Posts post = mPost.get(position);
+        String sort = displayContent(post.getContent());
         holder.time.setText(post.getTime());
         holder.date.setText(post.getDate());
         holder.topic.setText(post.getTopic());
         holder.title.setText(post.getTitle());
-        holder.content.setText(post.getContent());
+        holder.content.setText(sort);
         holder.writer.setText(post.getFullname());
 
         String postid = post.getUid() + post.getDate() + post.getTime();
@@ -135,6 +136,17 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             like = itemView.findViewById(R.id.like);
             count_like = itemView.findViewById(R.id.count_like);
         }
+    }
+    private String displayContent(String content){
+        int count = 0;
+        StringBuilder sb = new StringBuilder();
+        String[] words = content.split(" ");
+        for (String w: words){
+            sb.append(w+ " ");
+            count++;
+            if (count == 10) break;
+        }
+        return sb.toString();
     }
 
 

@@ -41,6 +41,7 @@ public class SearchFragment extends Fragment {
     private Button topic,btn_test;
     private RecyclerView recyclerView;
     private List list;
+    private ArrayList<String> PostKey;
     private EditText search;
     private PostAdapter postAdapter;
     private ImageButton btn_search;
@@ -79,11 +80,28 @@ public class SearchFragment extends Fragment {
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
         list = new ArrayList<>();
-
-
-        postAdapter = new PostAdapter(getContext(),list);
+        databaseReference = FirebaseDatabase.getInstance().getReference("Posts");
+        PostKey = new ArrayList<String>();
+        postAdapter = new PostAdapter(getContext(),list, PostKey);
         recyclerView.setAdapter(postAdapter);
-        search = view.findViewById(R.id.search_bar);
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    Posts post = dataSnapshot.getValue(Posts.class);
+                    String postkey = dataSnapshot.getKey();
+                    PostKey.add(postkey);
+
+                }
+                postAdapter.notifyDataSetChanged();
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+            search = view.findViewById(R.id.search_bar);
         if(search.getText().toString().equals("")) list.clear();
         search.addTextChangedListener(new TextWatcher() {
             @Override
@@ -114,6 +132,7 @@ public class SearchFragment extends Fragment {
                 list.clear();
                 for (DataSnapshot data : snapshot.getChildren()){
                     Posts p = data.getValue(Posts.class);
+
                     list.add(p);
                 }
                 postAdapter.notifyDataSetChanged();

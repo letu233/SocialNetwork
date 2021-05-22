@@ -48,6 +48,7 @@ public class HomeFragment extends Fragment {
     private DatabaseReference UsersRef, databaseReference;
     private List<Posts> list;
     private List<Users> listUser;
+    private ArrayList<String> PostKey;
     private FirebaseUser firebaseUser;
     String currentUserID;
     @Override
@@ -65,7 +66,8 @@ public class HomeFragment extends Fragment {
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
         list = new ArrayList<>();
-        postAdapter = new PostAdapter(getContext(),list);
+        PostKey = new ArrayList<String>();
+        postAdapter = new PostAdapter(getContext(),list, PostKey);
         recyclerView.setAdapter(postAdapter);
 
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -73,6 +75,8 @@ public class HomeFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot dataSnapshot: snapshot.getChildren()){
                     Posts post = dataSnapshot.getValue(Posts.class);
+                    String postkey = dataSnapshot.getKey();
+                    PostKey.add(postkey);
                     list.add(post);
 
 

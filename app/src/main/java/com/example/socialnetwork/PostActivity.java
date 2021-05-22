@@ -394,7 +394,6 @@ private Toolbar mToolbar;
         Calendar calFordTime = Calendar.getInstance();
         SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm");
         saveCurrentTime = currentTime.format(calFordDate.getTime());
-
         postRandomName = saveCurrentDate + saveCurrentTime;
         UsersRef.child(current_user_id).addValueEventListener(new ValueEventListener() {
             @Override

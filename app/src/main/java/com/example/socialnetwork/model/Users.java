@@ -3,6 +3,10 @@ package com.example.socialnetwork.model;
 public class Users {
     private String name, company, email;
 
+    public Users(){
+
+    }
+
     public Users(String name, String company, String email) {
         this.name = name;
         this.company = company;

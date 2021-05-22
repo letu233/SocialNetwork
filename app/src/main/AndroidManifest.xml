@@ -9,8 +9,11 @@
         android:roundIcon="@drawable/ic_logo_new"
         android:supportsRtl="true"
         android:theme="@style/Theme.SocialNetwork">
-        <activity android:name=".MainActivity" android:windowSoftInputMode="adjustPan"></activity>
-        <activity android:name=".PostActivity"></activity>
+
+        <activity android:name=".EditProfileActivity" />
+        <activity android:name=".MainActivity" />
+        <activity android:name=".PostActivity" />
+
         <activity android:name=".RegisterActivity" />
         <activity android:name=".Login">
             <intent-filter>

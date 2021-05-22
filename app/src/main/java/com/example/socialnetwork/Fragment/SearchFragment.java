@@ -44,6 +44,7 @@ public class SearchFragment extends Fragment {
     private EditText search;
     private PostAdapter postAdapter;
     private ImageButton btn_search;
+    private ArrayList<String> postKey;
 //    public SearchFragment() {
 //        // Required empty public constructor
 //    }
@@ -79,9 +80,9 @@ public class SearchFragment extends Fragment {
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
         list = new ArrayList<>();
+        postKey = new ArrayList<String>();
 
-
-        postAdapter = new PostAdapter(getContext(),list);
+        postAdapter = new PostAdapter(getContext(),list, postKey);
         recyclerView.setAdapter(postAdapter);
         search = view.findViewById(R.id.search_bar);
         if(search.getText().toString().equals("")) list.clear();
@@ -114,6 +115,8 @@ public class SearchFragment extends Fragment {
                 list.clear();
                 for (DataSnapshot data : snapshot.getChildren()){
                     Posts p = data.getValue(Posts.class);
+                    String postkey = data.getKey();
+                    postKey.add(postkey);
                     list.add(p);
                 }
                 postAdapter.notifyDataSetChanged();

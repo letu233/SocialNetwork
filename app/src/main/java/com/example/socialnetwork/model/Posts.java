@@ -16,6 +16,7 @@ public class Posts {
         this.topic = topic;
         this.title = title;
         this.content = content;
+
     }
 
     public Posts(String uid, String time, String date, String fullname, String email, String topic, String title, String content) {
@@ -27,6 +28,7 @@ public class Posts {
         this.topic = topic;
         this.title = title;
         this.content = content;
+
     }
 
     public String getTopic() {

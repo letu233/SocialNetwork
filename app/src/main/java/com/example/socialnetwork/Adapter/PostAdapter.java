@@ -39,6 +39,8 @@ import java.util.List;
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     public Context mContext;
     public List<Posts> mPost;
+    public Posts posts;
+    public String postKey;
     private FirebaseUser firebaseUser;
     private FirebaseAuth mAuth;
     private DatabaseReference PostsRef;
@@ -47,6 +49,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         this.mContext = mContext;
         this.mPost = mPost;
         this.PostKey = Postkey;
+    }
+
+    public PostAdapter(Context mContext, Posts posts, String postKey) {
+        this.mContext = mContext;
+        this.posts = posts;
+        this.postKey = postKey;
     }
 
     @NonNull

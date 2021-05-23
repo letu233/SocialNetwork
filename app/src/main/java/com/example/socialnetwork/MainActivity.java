@@ -21,13 +21,22 @@ import android.widget.Toast;
 
 import com.example.socialnetwork.Fragment.HomeFragment;
 import com.example.socialnetwork.model.Posts;
+import com.example.socialnetwork.model.Users;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 //import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import com.example.socialnetwork.Fragment.HomeFragment;
@@ -208,7 +217,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main1);
-
+        mAuth = FirebaseAuth.getInstance();
+        String uid = mAuth.getCurrentUser().getUid();
+        GoogleSignInAccount signInAccount = GoogleSignIn.getLastSignedInAccount(this);
+        Users user = new Users(signInAccount.getDisplayName(),"null",signInAccount.getEmail(),uid);
+        checkUserExist(user);
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(onNav);
@@ -312,4 +325,38 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
     };
+
+    private void checkUserExist(Users user){
+        Users u = new Users(user.getName(),"null",user.getEmail());
+        DatabaseReference dr = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference userRef = dr.child("User");
+        Query query = userRef.orderByChild("email").equalTo(user.getEmail());
+        ValueEventListener eventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(!snapshot.exists()){
+                    //create new user
+                    FirebaseDatabase.getInstance().getReference("User")
+                            .child(user.getUid()).setValue(u).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isSuccessful()){
+                                //Toast.makeText(Home.this,"Registered!!!",Toast.LENGTH_SHORT).show();
+                            }else{
+                                //Toast.makeText(Home.this,"Failed!!!",Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }else{
+                    Toast.makeText(MainActivity.this,"User exist!!!",Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };
+        query.addListenerForSingleValueEvent(eventListener);
+    }
 }

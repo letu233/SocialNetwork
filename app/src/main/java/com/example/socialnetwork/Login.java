@@ -195,49 +195,49 @@ public class Login extends AppCompatActivity
 
 
 
-    private void AllowingUserToLogin()
-    {
-        String email = UserEmail.getText().toString();
-        String password = UserPassword.getText().toString();
-
-        if(TextUtils.isEmpty(email))
-        {
-            Toast.makeText(this, "Please write your email...", Toast.LENGTH_SHORT).show();
-        }
-        else if(TextUtils.isEmpty(password))
-        {
-            Toast.makeText(this, "Please write your password...", Toast.LENGTH_SHORT).show();
-        }
-        else
-        {
-            loadingBar.setTitle("Login");
-            loadingBar.setMessage("Please wait, while we are allowing you to login into your Account...");
-            loadingBar.setCanceledOnTouchOutside(true);
-            loadingBar.show();
-
-
-            mAuth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task)
-                        {
-                            if(task.isSuccessful())
-                            {
-                                SendUserToMainActivity();
-
-                                Toast.makeText(Login.this, "you are Logged In successfully.", Toast.LENGTH_SHORT).show();
-                                loadingBar.dismiss();
-                            }
-                            else
-                            {
-                                String message = task.getException().getMessage();
-                                Toast.makeText(Login.this, "Error occured: " + message, Toast.LENGTH_SHORT).show();
-                                loadingBar.dismiss();
-                            }
-                        }
-                    });
-        }
-    }
+//    private void AllowingUserToLogin()
+//    {
+//        String email = UserEmail.getText().toString();
+//        String password = UserPassword.getText().toString();
+//
+//        if(TextUtils.isEmpty(email))
+//        {
+//            Toast.makeText(this, "Please write your email...", Toast.LENGTH_SHORT).show();
+//        }
+//        else if(TextUtils.isEmpty(password))
+//        {
+//            Toast.makeText(this, "Please write your password...", Toast.LENGTH_SHORT).show();
+//        }
+//        else
+//        {
+//            loadingBar.setTitle("Login");
+//            loadingBar.setMessage("Please wait, while we are allowing you to login into your Account...");
+//            loadingBar.setCanceledOnTouchOutside(true);
+//            loadingBar.show();
+//
+//
+//            mAuth.signInWithEmailAndPassword(email, password)
+//                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<AuthResult> task)
+//                        {
+//                            if(task.isSuccessful())
+//                            {
+//                                SendUserToMainActivity();
+//
+//                                Toast.makeText(Login.this, "you are Logged In successfully.", Toast.LENGTH_SHORT).show();
+//                                loadingBar.dismiss();
+//                            }
+//                            else
+//                            {
+//                                String message = task.getException().getMessage();
+//                                Toast.makeText(Login.this, "Error occured: " + message, Toast.LENGTH_SHORT).show();
+//                                loadingBar.dismiss();
+//                            }
+//                        }
+//                    });
+//        }
+//    }
 
 
 
@@ -261,9 +261,9 @@ public class Login extends AppCompatActivity
 
 
 
-    private void SendUserToRegisterActivity()
-    {
-        Intent registerIntent = new Intent(Login.this, RegisterActivity.class);
-        startActivity(registerIntent);
-    }
+//    private void SendUserToRegisterActivity()
+//    {
+//        Intent registerIntent = new Intent(Login.this, RegisterActivity.class);
+//        startActivity(registerIntent);
+//    }
 }

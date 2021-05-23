@@ -8,39 +8,45 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?android:attr/windowBackground"
-        android:id="@+id/bar">
+        android:id="@+id/bar"
+        android:background="@drawable/notification_background">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="18sp"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:textSize="24dp"
                 android:maxLines="1"
-                android:textStyle="bold"
+
                 android:id="@+id/username"
                 android:text="Profile"
-                />
-            <TextView
-                android:layout_width="60dp"
-                android:layout_height="20dp"
-                android:text="Sign out"
-                android:layout_toLeftOf="@id/options"
+                android:gravity="center"
+                android:textColor="@color/white"
+
+
                 />
 
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+
+            <Button
+                android:layout_width="100dp"
+                android:layout_height="31dp"
+                android:layout_marginTop="3dp"
                 android:id="@+id/options"
                 android:src="@drawable/logout"
                 android:scaleType="centerCrop"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="10dp"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="10dp" />
+                android:text="Sign out"
+                android:textColor="@color/red"
+                android:layout_marginRight="5dp"
+                android:textSize="10dp"
+                android:gravity="center"
+                android:drawableRight="@drawable/ic_signout"
+                android:background="@drawable/button_custom"/>
 
         </RelativeLayout>
 
@@ -60,7 +66,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:background="#E4CFE4"
+                android:background="#FFFFFF"
                 android:id="@+id/top_bar"
                 android:padding="16dp">
 
@@ -76,6 +82,7 @@
                         android:text="Name"
                         android:textSize="18sp"
                         android:textColor="@color/black"
+                        android:fontFamily="sans-serif-condensed-light"
                         android:textStyle="bold" />
 
                     <TextView
@@ -126,7 +133,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="@color/black"
-                                android:text="posts"/>
+                                android:text="Posts: "/>
                         </LinearLayout>
 
                     </LinearLayout>
@@ -136,7 +143,8 @@
                         android:layout_marginTop="8dp"
                         android:drawableRight="@drawable/ic_edit"
                         android:text="Edit"
-                        android:background="@color/purple_200"
+                        android:textStyle="italic"
+                        android:background="@color/grey_1"
                         android:id="@+id/edit_profile"
                         />
                 </LinearLayout>
@@ -148,7 +156,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="-5dp"
                 android:layout_marginRight="-5dp"
-                android:background="@drawable/custom_input"
+                android:background="@drawable/background_border"
                 android:orientation="horizontal">
 
                 <ImageView

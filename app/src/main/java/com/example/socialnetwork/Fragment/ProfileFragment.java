@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,8 +24,16 @@ import android.widget.TextView;
 import com.example.socialnetwork.Adapter.PostAdapter;
 import com.example.socialnetwork.EditProfileActivity;
 import com.example.socialnetwork.Login;
+import com.example.socialnetwork.MainActivity;
 import com.example.socialnetwork.R;
 import com.example.socialnetwork.model.Posts;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -39,9 +48,9 @@ import java.util.List;
 
 //Home Fragment ............
 public class ProfileFragment extends Fragment {
-    ImageView options, myPost, myFav;
+    ImageView  myPost, myFav;
     TextView posts, fullname, companytv, emailtv;
-    Button edit_profile;
+    Button edit_profile, options;
 
     RecyclerView recyclerView;
     PostAdapter myPostAdapter;
@@ -51,7 +60,7 @@ public class ProfileFragment extends Fragment {
     RecyclerView recyclerViewFav;
     PostAdapter myPostAdapterFav;
     List<Posts> postsListFav;
-
+    private GoogleApiClient mGoogleApiClient;
     FirebaseAuth mAuth;
     FirebaseUser firebaseUser;
     DatabaseReference databaseReference, postRef;
@@ -120,14 +129,15 @@ public class ProfileFragment extends Fragment {
         options.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                mAuth.signOut();
-                startActivity(new Intent(getContext(), Login.class));
+                signout();
             }
         });
 
         myPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                myPost.setColorFilter(ContextCompat.getColor(getContext(), R.color.red_2),android.graphics.PorterDuff.Mode.MULTIPLY);
+                myFav.setColorFilter(ContextCompat.getColor(getContext(), R.color.black),android.graphics.PorterDuff.Mode.MULTIPLY);
                 recyclerView.setVisibility(View.VISIBLE);
                 recyclerViewFav.setVisibility(View.GONE);
             }
@@ -136,6 +146,8 @@ public class ProfileFragment extends Fragment {
         myFav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                myPost.setColorFilter(ContextCompat.getColor(getContext(), R.color.black),android.graphics.PorterDuff.Mode.MULTIPLY);
+                myFav.setColorFilter(ContextCompat.getColor(getContext(), R.color.red_2),android.graphics.PorterDuff.Mode.MULTIPLY);
                 recyclerView.setVisibility(View.GONE);
                 recyclerViewFav.setVisibility(View.VISIBLE);
 
@@ -158,7 +170,7 @@ public class ProfileFragment extends Fragment {
                     String name = ""+ds.child("name").getValue();
                     String company = ""+ds.child("company").getValue();
                     String email = ""+ds.child("email").getValue();
-
+                    if( company.equals("null")) company = "";
                     fullname.setText(name);
                     companytv.setText(company);
                     emailtv.setText(email);
@@ -289,5 +301,36 @@ public class ProfileFragment extends Fragment {
             }
         });
     }
+
+    private void signout(){
+        GoogleSignInOptions gso = new GoogleSignInOptions.
+                Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).
+                build();
+
+        GoogleSignInClient googleSignInClient= GoogleSignIn.getClient(getContext(),gso);
+        googleSignInClient.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()){
+                    FirebaseAuth.getInstance().signOut(); // very important if you are using firebase.
+                    Intent login_intent = new Intent(getContext(),Login.class);
+                    login_intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK); // clear previous task (optional)
+                    startActivity(login_intent);
+                }
+            }
+        });
+
+    }
+//    @Override
+//    public void onStart() {
+//        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//                .requestEmail()
+//                .build();
+//        mGoogleApiClient = new GoogleApiClient.Builder(getContext())
+//                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+//                .build();
+//        mGoogleApiClient.connect();
+//        super.onStart();
+//    }
 
 }

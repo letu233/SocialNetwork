@@ -2,6 +2,22 @@ package com.example.socialnetwork.model;
 
 public class Users {
     private String name, company, email;
+    private String uid;
+
+    public Users(String name, String company, String email, String uid) {
+        this.name = name;
+        this.company = company;
+        this.email = email;
+        this.uid = uid;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
 
     public Users(){
 

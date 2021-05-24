@@ -1,6 +1,7 @@
 package com.example.socialnetwork.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.socialnetwork.CommentActivity;
 import com.example.socialnetwork.MainActivity;
 import com.example.socialnetwork.PostActivity;
 import com.example.socialnetwork.R;
@@ -37,6 +39,8 @@ import java.util.List;
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     public Context mContext;
     public List<Posts> mPost;
+    public Posts posts;
+    public String postKey;
     private FirebaseUser firebaseUser;
     private FirebaseAuth mAuth;
     private DatabaseReference PostsRef;
@@ -45,6 +49,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         this.mContext = mContext;
         this.mPost = mPost;
         this.PostKey = Postkey;
+    }
+
+    public PostAdapter(Context mContext, Posts posts, String postKey) {
+        this.mContext = mContext;
+        this.posts = posts;
+        this.postKey = postKey;
     }
 
     @NonNull
@@ -86,6 +96,28 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         holder.writer.setText(post.getFullname());
 
 //        String postid = post.getUid() + post.getDate() + post.getTime();
+
+        holder.comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, CommentActivity.class);
+                intent.putExtra("postId", postid);
+                intent.putExtra("authorId", post.getFullname());
+                mContext.startActivity(intent);
+
+            }
+        });
+        holder.count_comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, CommentActivity.class);
+                intent.putExtra("postId", postid);
+                intent.putExtra("authorId", post.getFullname());
+                mContext.startActivity(intent);
+            }
+        });
+        getComments(postid, holder.count_comment);
+
         isLikes(postid, holder.like);
         numLikes(holder.count_like, postid);
         holder.like.setOnClickListener(new View.OnClickListener() {
@@ -147,11 +179,25 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         });
     }
 
+    private void getComments (String postId, final TextView text ){
+        FirebaseDatabase.getInstance().getReference().child("Comments").child(postId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                text.setText( dataSnapshot.getChildrenCount() + " Comments");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView title, content, writer, time, date, count_like;
+        public TextView title, content, writer, time, date, count_like, count_comment;
         public Button topic;
-        public ImageView like;
+        public ImageView like, comment;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             time = itemView.findViewById(R.id.tv_time);
@@ -162,6 +208,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             writer = itemView.findViewById(R.id.tv_writer);
             like = itemView.findViewById(R.id.like);
             count_like = itemView.findViewById(R.id.count_like);
+            comment = itemView.findViewById(R.id.comment);
+            count_comment = itemView.findViewById(R.id.count_cmt);
         }
     }
     private String displayContent(String content){

@@ -183,7 +183,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         FirebaseDatabase.getInstance().getReference().child("Comments").child(postId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                text.setText( dataSnapshot.getChildrenCount() + " Comments");
+                text.setText( dataSnapshot.getChildrenCount()+"");
             }
 
             @Override

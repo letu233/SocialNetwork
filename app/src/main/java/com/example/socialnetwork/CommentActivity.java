@@ -222,7 +222,7 @@ public class CommentActivity extends AppCompatActivity {
         map.put("publisher", fUser.getUid());
         map.put("time", saveCurrentTime);
         map.put("date", saveCurrentDate);
-
+        addComment.setText("");
         FirebaseDatabase.getInstance().getReference().child("Comments").child(postId)
                 .push().setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -234,5 +234,6 @@ public class CommentActivity extends AppCompatActivity {
                 }
             }
         });
+
     }
 }

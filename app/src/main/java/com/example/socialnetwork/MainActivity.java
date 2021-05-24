@@ -221,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
         String uid = mAuth.getCurrentUser().getUid();
         GoogleSignInAccount signInAccount = GoogleSignIn.getLastSignedInAccount(this);
         Users user = new Users(signInAccount.getDisplayName(),"null",signInAccount.getEmail(),uid);
-        checkUserExist(user);
+        //checkUserExist(user);
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(onNav);

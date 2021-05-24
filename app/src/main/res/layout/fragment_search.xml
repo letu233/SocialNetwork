@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/search_toolbar"
-            android:background="?android:attr/windowBackground"
+            android:background="@drawable/notification_background"
             android:padding="15dp">
 
             <EditText
@@ -34,8 +34,9 @@
                 android:textColor="@color/grey_2"
                 android:textStyle="italic"
                 android:gravity="center_vertical"
-                android:textSize="20dp"
+                android:textSize="19dp"
                 android:drawableLeft="@drawable/ic_glass"
+                android:textColorHint="@color/white"
                 />
 
 

@@ -34,6 +34,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.EventListener;
+import java.util.HashMap;
 import java.util.List;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
@@ -103,6 +104,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                 Intent intent = new Intent(mContext, CommentActivity.class);
                 intent.putExtra("postId", postid);
                 intent.putExtra("authorId", post.getFullname());
+                intent.putExtra("writerId", post.getUid());
                 mContext.startActivity(intent);
 
             }
@@ -126,6 +128,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                 if (holder.like.getTag().equals("like")){
                     FirebaseDatabase.getInstance().getReference().child("Likes")
                             .child(postid).child(firebaseUser.getUid()).setValue(true);
+                    addNotifications(post.getUid(), postid);
                 }else{
                     FirebaseDatabase.getInstance().getReference().child("Likes")
                             .child(postid).child(firebaseUser.getUid()).removeValue();
@@ -222,6 +225,18 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             if (count == 10) break;
         }
         return sb.toString();
+    }
+
+    private void addNotifications(String uid, String postid){
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Notifications")
+                .child(uid);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("uid", firebaseUser.getUid());
+        map.put("text", "liked your post");
+        map.put("postid", postid);
+        map.put("ispost", false);
+        databaseReference.push().setValue(map);
+
     }
 
 

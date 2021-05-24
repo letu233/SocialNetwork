@@ -49,10 +49,10 @@ public class CommentActivity extends AppCompatActivity {
     private PostAdapter postAdapter;
     private Posts posts;
 
-    
+
     private EditText addComment;
     private TextView post;
-
+    private String writerId;
     private String authorId;
     private String postId;
     private String saveCurrentDate, saveCurrentTime;
@@ -104,6 +104,7 @@ public class CommentActivity extends AppCompatActivity {
         Intent intent = getIntent();
         postId = intent.getStringExtra("postId");
         authorId = intent.getStringExtra("authorId");
+        writerId = intent.getStringExtra("writerId");
         postAdapter = new PostAdapter(this ,posts, postId);
 
         time = findViewById(R.id.tv_time);
@@ -222,6 +223,7 @@ public class CommentActivity extends AppCompatActivity {
         map.put("publisher", fUser.getUid());
         map.put("time", saveCurrentTime);
         map.put("date", saveCurrentDate);
+        addNotifications(writerId, postId, fUser.getUid(), "commented "+ addComment.getText().toString());
         addComment.setText("");
         FirebaseDatabase.getInstance().getReference().child("Comments").child(postId)
                 .push().setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -234,6 +236,17 @@ public class CommentActivity extends AppCompatActivity {
                 }
             }
         });
+
+    }
+    private void addNotifications(String publisherid, String postid, String uid, String cmt){
+        DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Notifications")
+                .child(publisherid);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("uid", uid);
+        map.put("text", cmt);
+        map.put("postid", postid);
+        map.put("ispost", false);
+        databaseReference1.push().setValue(map);
 
     }
 }

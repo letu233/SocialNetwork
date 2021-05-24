@@ -2,7 +2,8 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    >
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,7 +17,8 @@
                 android:layout_height="wrap_content"
                 android:text="From Industry"
                 android:textStyle="italic"
-                android:layout_marginLeft="20dp"/>
+                android:layout_marginLeft="20dp"
+                android:id="@+id/from"/>
         </LinearLayout>
         <RelativeLayout
             android:layout_width="match_parent"
@@ -30,14 +32,25 @@
                 android:layout_marginLeft="20dp"
                 />
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:layout_toRightOf="@+id/bell"
                 android:text="Title here"
                 android:textSize="16dp"
                 android:layout_marginLeft="20dp"
                 android:gravity="center_vertical"
-                android:layout_marginRight="30dp"/>
+
+                android:id="@+id/notify_title"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_toRightOf="@+id/notify_title"
+                android:text="Title here"
+                android:textSize="16dp"
+                android:layout_marginLeft="5dp"
+                android:gravity="center_vertical"
+                android:layout_marginRight="30dp"
+                android:id="@+id/content_notification"/>
 
 
         </RelativeLayout>
@@ -49,7 +62,8 @@
                 android:layout_height="wrap_content"
                 android:text="time"
                 android:textSize="12dp"
-                android:layout_marginLeft="25dp"/>
+                android:layout_marginLeft="25dp"
+                android:id="@+id/notify_time"/>
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

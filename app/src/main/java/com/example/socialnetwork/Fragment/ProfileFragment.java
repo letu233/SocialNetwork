@@ -89,7 +89,7 @@ public class ProfileFragment extends Fragment {
         edit_profile = view.findViewById(R.id.edit_profile);
 
         PostKey = new ArrayList<String>();
-
+        getMyPost();
 
         recyclerView = view.findViewById(R.id.recycle_view);
         recyclerView.setHasFixedSize(true);
@@ -108,14 +108,14 @@ public class ProfileFragment extends Fragment {
         linearLayoutManagerFav.setReverseLayout(true);
         linearLayoutManagerFav.setStackFromEnd(true);
         recyclerViewFav.setLayoutManager(linearLayoutManagerFav);
-        postsListFav = new ArrayList<>();
-        myPostAdapterFav = new PostAdapter(getContext(), postsListFav, PostKey);
-        recyclerViewFav.setAdapter(myPostAdapterFav);
+
+
 
         recyclerView.setVisibility(View.VISIBLE);
         recyclerViewFav.setVisibility(View.GONE);
 
-        getPostKey();
+        myPost.setColorFilter(ContextCompat.getColor(getContext(), R.color.red_2),android.graphics.PorterDuff.Mode.MULTIPLY);
+        myFav.setColorFilter(ContextCompat.getColor(getContext(), R.color.black),android.graphics.PorterDuff.Mode.MULTIPLY);
 
         getUserInfo();
 
@@ -148,6 +148,10 @@ public class ProfileFragment extends Fragment {
             public void onClick(View v) {
                 myPost.setColorFilter(ContextCompat.getColor(getContext(), R.color.black),android.graphics.PorterDuff.Mode.MULTIPLY);
                 myFav.setColorFilter(ContextCompat.getColor(getContext(), R.color.red_2),android.graphics.PorterDuff.Mode.MULTIPLY);
+                postsListFav = new ArrayList<>();
+                myFavourites();
+                myPostAdapterFav = new PostAdapter(getContext(), postsListFav, (ArrayList<String>) listMyfavs);
+                recyclerViewFav.setAdapter(myPostAdapterFav);
                 recyclerView.setVisibility(View.GONE);
                 recyclerViewFav.setVisibility(View.VISIBLE);
 
@@ -155,8 +159,7 @@ public class ProfileFragment extends Fragment {
         });
 
         getPostCount();
-        getMyPost();
-        myFavourites();
+
 
         return view;
     }
@@ -184,23 +187,23 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    private void getPostKey(){
-        postRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot dataSnapshot: snapshot.getChildren()){
-                    Posts post = dataSnapshot.getValue(Posts.class);
-                    String postkey = dataSnapshot.getKey();
-                    PostKey.add(postkey);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
+//    private void getPostKey(){
+//        postRef.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                for(DataSnapshot dataSnapshot: snapshot.getChildren()){
+//                    Posts post = dataSnapshot.getValue(Posts.class);
+//                    String postkey = dataSnapshot.getKey();
+//                    PostKey.add(postkey);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+//    }
 
     private void getPostCount(){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");
@@ -225,13 +228,17 @@ public class ProfileFragment extends Fragment {
     }
 
     private void getMyPost(){
+        PostKey.clear();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                postsList.clear();
                 for (DataSnapshot ds : snapshot.getChildren()){
                     Posts post = ds.getValue(Posts.class);
+                    String postkey = ds.getKey();
                     if(post.getUid()!= null && firebaseUser.getUid()!= null && post.getUid().contains(firebaseUser.getUid())){
+                        PostKey.add(postkey);
                         postsList.add(post);
                     }
                 }
@@ -251,6 +258,7 @@ public class ProfileFragment extends Fragment {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                listMyfavs.clear();
                 for (DataSnapshot ds : snapshot.getChildren()){
                     String postId = ds.getKey();
                     reference.child(postId).addValueEventListener(new ValueEventListener() {
@@ -283,6 +291,7 @@ public class ProfileFragment extends Fragment {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                postsListFav.clear();
                 for (DataSnapshot ds : snapshot.getChildren()){
                     Posts post = ds.getValue(Posts.class);
                     for (String id : listMyfavs){

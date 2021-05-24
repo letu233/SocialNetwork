@@ -221,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
         String uid = mAuth.getCurrentUser().getUid();
         GoogleSignInAccount signInAccount = GoogleSignIn.getLastSignedInAccount(this);
         Users user = new Users(signInAccount.getDisplayName(),"null",signInAccount.getEmail(),uid);
-        //checkUserExist(user);
+        checkUserExist(user);
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(onNav);
@@ -348,7 +348,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
                 }else{
-                    Toast.makeText(MainActivity.this,"User exist!!!",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this,"Welcome "+ u.getName(),Toast.LENGTH_SHORT).show();
                 }
             }
 

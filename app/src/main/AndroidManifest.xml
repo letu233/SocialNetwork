@@ -11,7 +11,7 @@
         android:theme="@style/Theme.SocialNetwork">
         <activity android:name=".CommentActivity"></activity>
         <activity android:name=".EditProfileActivity" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".MainActivity" android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".PostActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".Login">

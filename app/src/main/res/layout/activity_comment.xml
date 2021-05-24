@@ -77,7 +77,7 @@
                 android:text="content"
                 android:layout_margin="8dp"
                 android:textSize="18dp"
-                android:textColor="@color/grey_1">
+                android:textColor="@color/black">
 
             </TextView>
 
@@ -159,10 +159,10 @@
             </TextView>
         </RelativeLayout>
         <RelativeLayout
-            android:layout_width="401dp"
-            android:layout_height="362dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="44dp"
+            android:layout_marginBottom="50dp"
             android:focusableInTouchMode="true">
 
 
